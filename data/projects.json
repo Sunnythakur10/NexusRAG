@@ -1,0 +1,72 @@
+{
+  "projects": [
+    {
+      "manga_id": "test_case",
+      "display_name": "Test Case",
+      "language": "Japanese",
+      "chapters_completed": [
+        1
+      ]
+    },
+    {
+      "manga_id": "testcase2",
+      "display_name": "testCase2",
+      "language": "Japanese",
+      "chapters_completed": [
+        1
+      ]
+    },
+    {
+      "manga_id": "inzagi",
+      "display_name": "inzagi",
+      "language": "Japanese",
+      "chapters_completed": [
+        1
+      ]
+    },
+    {
+      "manga_id": "sadsd",
+      "display_name": "sadsd",
+      "language": "Japanese",
+      "chapters_completed": [
+        1
+      ]
+    },
+    {
+      "manga_id": "dgfd",
+      "display_name": "dgfd",
+      "language": "Japanese",
+      "chapters_completed": [
+        1
+      ]
+    },
+    {
+      "manga_id": "fbfgb",
+      "display_name": "fbfgb",
+      "language": "Japanese",
+      "chapters_completed": [
+        1
+      ]
+    },
+    {
+      "manga_id": "test",
+      "display_name": "test",
+      "language": "Japanese",
+      "chapters_completed": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "manga_id": "test2",
+      "display_name": "test2",
+      "language": "Japanese",
+      "chapters_completed": [
+        1,
+        2,
+        3
+      ]
+    }
+  ]
+}

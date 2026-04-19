@@ -1,0 +1,13 @@
+# Virtual Environment
+env/
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# Local Databases & Memory
+chroma_db/
+lumina_cache.db
+
+# Secrets
+.env
