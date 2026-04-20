@@ -580,7 +580,7 @@ def main() -> None:
         chapter_data["manga_id"] = str(selected_manga_id)
         with st.spinner("Pipeline running... this may take a while"):
             try:
-                results = process_chapter(chapter_data, client)
+                results = process_chapter(chapter_data)
             except Exception as exc:
                 st.error(f"Pipeline error: {exc}")
                 return

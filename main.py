@@ -1,6 +1,5 @@
 import os
 from typing import Any, Dict
-from groq import Groq
 from langchain_core.globals import set_llm_cache
 from langchain_community.cache import SQLiteCache
 from langchain_groq import ChatGroq  # NEW IMPORT
@@ -70,8 +69,7 @@ from memory.vector_store import (
 
 from utils.project_manager import mark_chapter_complete
 
-# TODO: Import CrewAI orchestration primitives when implementing multi-agent Crew.
-# from crewai import Crew
+
 
 
 def test_groq_connection() -> None:
@@ -84,11 +82,6 @@ def test_groq_connection() -> None:
     except Exception as exc:
         print(f"[Groq Test] Error: {exc}")
 
-def build_crew():
-    """
-    Placeholder for future CrewAI-based orchestration.
-    """
-    raise NotImplementedError("Crew construction is not implemented yet.")
 
 
 # ==========================================
@@ -96,9 +89,13 @@ def build_crew():
 # ==========================================
 @with_exponential_backoff()
 def translation_node(state: PanelState) -> PanelState:
+    # SHORT-CIRCUIT: If batch translation was already injected, skip this heavy generation
+    if state["translation_retries"] >= 3 and state["translated_output"]:
+        print("[LangGraph] Node: Translation (Skipping - Using Batch Translation)")
+        return state
+
     print(f"[LangGraph] Node: Translation (Attempt {state['translation_retries'] + 1}/3)")
     
-
     output = run_translation_agent(
         state["raw_text"], 
         quality_model=state["quality_model"], 
@@ -261,7 +258,7 @@ def _flagged_from_scores(scores: Dict[str, Any]) -> bool:
     return False
 
 
-def process_chapter(chapter_data: Dict[str, Any], client: Groq) -> list[Dict[str, Any]]:
+def process_chapter(chapter_data: Dict[str, Any]) -> list[Dict[str, Any]]:
     """
     Process an uploaded chapter JSON through the 4-step pipeline per panel.
 
@@ -355,7 +352,7 @@ def process_chapter(chapter_data: Dict[str, Any], client: Groq) -> list[Dict[str
 
             if character_name == "TITLE_CARD":
                 try:
-                    translated = translate_literal_metadata(original_japanese, client)
+                    translated = translate_literal_metadata(original_japanese, quality_model)
                     if not translated:
                         translated = original_japanese
                     score = grade_translation_output(
@@ -388,7 +385,7 @@ def process_chapter(chapter_data: Dict[str, Any], client: Groq) -> list[Dict[str
 
         if normal_page_panels:
             try:
-                page_translation_map = translate_page(normal_page_panels, client)
+                page_translation_map = translate_page(normal_page_panels, quality_model)
             except Exception as exc:
                 print(f"[ProcessChapter] Page translation failed for page='{page_key}': {exc}")
                 page_translation_map = {}
@@ -538,6 +535,7 @@ def process_chapter(chapter_data: Dict[str, Any], client: Groq) -> list[Dict[str
         character_profile["manga_id"] = manga_id
 
         # Initialize the LangGraph State
+        # Initialize the LangGraph State
         initial_state: PanelState = {
             "raw_text": original_japanese,
             "character_name": character_name,
@@ -548,18 +546,18 @@ def process_chapter(chapter_data: Dict[str, Any], client: Groq) -> list[Dict[str
             "quality_model": quality_model,
             "fast_model": fast_model,
             
-            "detected_language": "japanese", # Passed down if needed
-            "translated_output": "",
+            "detected_language": "japanese", 
+            "translated_output": translated_output, # Inject the Step 0 batch translation
             "cultural_output": "",
             "continuity_output": "",
             "final_output": "",
             
-            "translation_scores": {},
+            "translation_scores": translation_scores, # Inject the batch Critic scores
             "cultural_scores": {},
             "continuity_scores": {},
             "typesetting_scores": {},
             
-            "translation_retries": 0,
+            "translation_retries": 3, # Force the node to short-circuit and skip regeneration
             "cultural_retries": 0,
             "continuity_retries": 0,
             "typesetting_retries": 0,

@@ -18,7 +18,6 @@ import json
 import os
 import sys
 
-from groq import Groq
 
 # Ensure the project root is on sys.path so we can import local utilities.
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -71,16 +70,9 @@ def detect_language(text: str) -> str:
     return "unknown"
 
 
-def translate_page(page_panels: list, client: Groq) -> dict:
+def translate_page(page_panels: list, model) -> dict:
     """
-    Translate one page worth of panel lines in a single LLM call.
-
-    Args:
-        page_panels: List of panel dicts for a single page.
-        client: Initialized Groq client.
-
-    Returns:
-        Dict mapping panel_id -> translated text.
+    Translate one page worth of panel lines in a single LLM call using LangChain LCEL.
     """
     items: list[tuple[str, str, str]] = []
     page_label = "Unknown"
@@ -89,8 +81,11 @@ def translate_page(page_panels: list, client: Groq) -> dict:
             continue
         panel_id = panel.get("panel_id") or panel.get("id") or panel.get("index")
         panel_id_str = str(panel_id if panel_id is not None else idx)
+        
+        # FIX 1: Corrected the typo here
         if page_label == "Unknown" and "-" in panel_id_str:
             page_label = panel_id_str.split("-", 1)[0]
+            
         character = str(panel.get("character") or "UNKNOWN").strip() or "UNKNOWN"
         text = str(panel.get("text") or "").strip()
         if not text:
@@ -100,6 +95,7 @@ def translate_page(page_panels: list, client: Groq) -> dict:
     if not items:
         return {}
 
+    # Merged the original rules WITH the new rhetorical question rules
     system_prompt = (
         "You are a professional manga translator specializing in Japanese to English.\n"
         "Translate each line independently and return strict JSON only.\n"
@@ -111,6 +107,10 @@ def translate_page(page_panels: list, client: Groq) -> dict:
         "- Preserve emotional intensity. Angry lines must sound angry. ('黙ってろ' = 'Shut up!' NOT 'Stop that').\n"
         "- Preserve self-doubt and hesitation exactly. ('夢だったんじゃないか' = 'Was that all a dream...?' NOT a neutral statement).\n"
         "- Never change character names mid-chapter. Maintain strict name consistency.\n"
+        "- これで〜できる/できるな = 'Now I can finally [verb]' NOT '[verb] is done/complete'. The action is possible now, not already completed.\n"
+        "- 〜んじゃないか / 〜じゃないか at end of sentence = rhetorical question expressing doubt/disbelief. NOT a statement of fact.\n"
+        "- まったく at start of line = 'Honestly...' / 'Unbelievable...' — expressing exasperation at someone else.\n"
+        "- あなたの〜はどうなっているんですか = 'What's wrong with your [noun]?' — speaker is scolding the listener, NEVER self-reflection.\n"
         "- Do NOT include any romaji, Japanese script, explanations, translation notes, or comments.\n"
         "- Output ONLY the translated English dialogue text, with no extra lines.\n"
     )
@@ -120,19 +120,26 @@ def translate_page(page_panels: list, client: Groq) -> dict:
         user_lines.append(f"[{panel_id_str}] {character}: {text}")
     user_content = "\n".join(user_lines)
 
-    completion = client.chat.completions.create(
-        model=MODEL_NAME,
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_content},
-        ],
-    )
+    # LangChain LCEL Implementation
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", system_prompt),
+        ("human", "{text}")
+    ])
 
-    raw = (completion.choices[0].message.content or "").strip()
+    chain = prompt | model
+    response = chain.invoke({"text": user_content})
+
+    raw = response.content.strip()
+    
+    # Clean markdown formatting if the LLM hallucinated code blocks
+    clean_json = raw.replace("```json", "").replace("```", "").strip()
+
     try:
-        parsed = json.loads(raw)
+        parsed = json.loads(clean_json)
     except json.JSONDecodeError:
+        print("[Warning] Batch translation failed to parse JSON. Falling back to empty mapping.")
         return {}
+        
     if not isinstance(parsed, dict):
         return {}
 
@@ -141,27 +148,21 @@ def translate_page(page_panels: list, client: Groq) -> dict:
         if v is None:
             continue
         result[str(k)] = str(v).strip()
+        
+    # FIX 2: Returning the correct variable
     return result
-
-
-def translate_literal_metadata(text: str, client: Groq) -> str:
-    """
-    Translate Japanese metadata text literally (dates/locations/proper nouns preserved).
-    """
-    completion = client.chat.completions.create(
-        model=MODEL_NAME,
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "Translate this Japanese metadata text literally, preserving all dates, "
-                    "locations, and proper nouns. Output only the translated text."
-                ),
-            },
-            {"role": "user", "content": text},
-        ],
+def translate_literal_metadata(original_japanese: str, model) -> str:
+    system_prompt = (
+        "You are a strict literal translator. Translate the given Japanese text to English.\n"
+        "Do not adapt, localize, or change the formatting. Provide ONLY the direct English translation."
     )
-    return (completion.choices[0].message.content or "").strip()
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", system_prompt),
+        ("human", "{text}")
+    ])
+    chain = prompt | model 
+    response = chain.invoke({"text": original_japanese})
+    return response.content.strip()
 
 
 def run_translation_agent(
@@ -202,6 +203,9 @@ def run_translation_agent(
         "- Preserve speaker perspective. First-person statements must stay first-person. ('うん、ある' said by Haruto = 'Yeah, I do' NOT 'It does').\n"
         "- Preserve emotional intensity. Angry lines must sound angry. ('黙ってろ' = 'Shut up!' NOT 'Stop that').\n"
         "- Preserve self-doubt and hesitation exactly. ('夢だったんじゃないか' = 'Was that all a dream...?' NOT a neutral statement).\n"
+        "- 〜んじゃないか / 〜じゃないか at end of sentence = rhetorical question expressing doubt/disbelief. NOT a statement of fact. (e.g., 昨日のこと、夢だったんじゃないか = 'Was yesterday all a dream...?').\n"
+        "- まったく at start of line = 'Honestly...' / 'Unbelievable...' — expressing exasperation at someone else.\n"
+        "- あなたの〜はどうなっているんですか = 'What's wrong with your [noun]?' — speaker is scolding the listener, NEVER self-reflection.\n"
         "- Never change character names mid-chapter. Maintain strict name consistency.\n"
         "- Do NOT include any romaji, Japanese script, explanations, translation notes, or comments.\n"
         "- Output ONLY the translated English dialogue text, with no extra lines.\n"

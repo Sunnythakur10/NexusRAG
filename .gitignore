@@ -11,3 +11,5 @@ lumina_cache.db
 
 # Secrets
 .env
+
+*.code-workspace
