@@ -10,3 +10,4 @@ python-dotenv>=1.0.1
 tenacity>=8.0.0
 sentence-transformers>=2.0.0
 torch>=2.0.0
+langchain-huggingface>=0.1.0
