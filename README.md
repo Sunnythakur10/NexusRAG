@@ -2,6 +2,7 @@
 
 ![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)
 ![LangGraph](https://img.shields.io/badge/LangGraph-State_Machine-orange)
+![LangSmith](https://img.shields.io/badge/LangSmith-Tracing-black)
 ![ChromaDB](https://img.shields.io/badge/ChromaDB-Vector_Memory-purple)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
@@ -57,6 +58,7 @@ To optimize latency and compute cost, the system utilizes two distinct LLMs:
 - **Automated Flagging:** Panels that fail to meet the Critic's threshold after maximum retries are gracefully allowed through but flagged (`"flagged": true`) for human-in-the-loop editorial review.
 - **Smart Narration Routing:** Intelligent logic ensures narration panels bypass cultural and continuity nodes to save compute and prevent hallucinated dialogue formatting.
 - **Version-Proof Prompting:** `SystemMessage` injection circumvents library dependency conflicts, making the agent immune to underlying LangGraph framework updates.
+- **Full Observability:** Integrated with LangSmith for real-time tracing of the LangGraph state machine, allowing granular debugging of token usage, latency, and agent routing logic.
 
 ---
 
@@ -116,6 +118,14 @@ Open .env and add your API key:
 
 Plaintext
 GROQ_API_KEY=your_api_key_here
+GROQ_API_KEY=your_groq_api_key_here
+
+# Optional: LangSmith Tracing
+LANGCHAIN_TRACING_V2=true
+LANGCHAIN_ENDPOINT="https://api.smith.langchain.com"
+LANGCHAIN_API_KEY=your_langsmith_api_key
+LANGCHAIN_PROJECT="NexusRAG"
+
 Usage
 Run the CLI Pipeline:
 Execute the main script to process chapters defined in your JSON data directory.
