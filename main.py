@@ -5,6 +5,7 @@ from langchain_core.globals import set_llm_cache
 from langchain_community.cache import SQLiteCache
 from langchain_groq import ChatGroq  # NEW IMPORT
 from utils.groq_client import get_models , load_environment
+from utils.rate_limiter import with_exponential_backoff
 from langgraph.graph import StateGraph, END
 from typing import TypedDict, Any, Dict
 # Initialize caching
@@ -93,7 +94,7 @@ def build_crew():
 # ==========================================
 # LANGGRAPH NODES (The Actors & Critics)
 # ==========================================
-
+@with_exponential_backoff()
 def translation_node(state: PanelState) -> PanelState:
     print(f"[LangGraph] Node: Translation (Attempt {state['translation_retries'] + 1}/3)")
     
@@ -113,7 +114,7 @@ def translation_node(state: PanelState) -> PanelState:
     state["translation_scores"] = scores
     state["translation_retries"] += 1
     return state
-
+@with_exponential_backoff()
 def cultural_node(state: PanelState) -> PanelState:
     print(f"[LangGraph] Node: Cultural (Attempt {state['cultural_retries'] + 1}/3)")
     
@@ -137,6 +138,7 @@ def cultural_node(state: PanelState) -> PanelState:
     state["cultural_retries"] += 1
     return state
 
+@with_exponential_backoff()
 def continuity_node(state: PanelState) -> PanelState:
     print(f"[LangGraph] Node: Continuity (Attempt {state['continuity_retries'] + 1}/3)")
     
@@ -162,6 +164,8 @@ def continuity_node(state: PanelState) -> PanelState:
     state["continuity_retries"] += 1
     return state
 
+
+@with_exponential_backoff()
 def typesetting_node(state: PanelState) -> PanelState:
     print(f"[LangGraph] Node: Typesetting (Attempt {state['typesetting_retries'] + 1}/3)")
     

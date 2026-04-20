@@ -105,6 +105,14 @@ def translate_page(page_panels: list, client: Groq) -> dict:
         "Translate each line independently and return strict JSON only.\n"
         "Preserve emotional state and who is speaking to whom.\n"
         "JSON keys must be panel_id strings and values must be translated English lines.\n"
+        "\n--- CRITICAL HARD RULES ---\n"
+        "- Preserve verb tense exactly. Present tense in Japanese must be present tense in English. ('しなきゃいけない' = 'I have to' NOT 'I had to').\n"
+        "- Preserve speaker perspective. First-person statements must stay first-person. ('うん、ある' said by Haruto = 'Yeah, I do' NOT 'It does').\n"
+        "- Preserve emotional intensity. Angry lines must sound angry. ('黙ってろ' = 'Shut up!' NOT 'Stop that').\n"
+        "- Preserve self-doubt and hesitation exactly. ('夢だったんじゃないか' = 'Was that all a dream...?' NOT a neutral statement).\n"
+        "- Never change character names mid-chapter. Maintain strict name consistency.\n"
+        "- Do NOT include any romaji, Japanese script, explanations, translation notes, or comments.\n"
+        "- Output ONLY the translated English dialogue text, with no extra lines.\n"
     )
 
     user_lines = [f"Page {page_label} — translate each line independently:"]
@@ -188,7 +196,13 @@ def run_translation_agent(
         "    never reverse them\n"
         "  * Definitive statements → translate as confident, not hesitant\n"
         "    (never add 'I guess' / 'I suppose' to a character who spoke with conviction)\n"
-        "- Never soften strong emotions or add uncertainty to confident statements\n"
+        "- Never soften strong emotions or add uncertainty to confident statements.\n"
+        "\n--- CRITICAL HARD RULES ---\n"
+        "- Preserve verb tense exactly. Present tense in Japanese must be present tense in English. ('しなきゃいけない' = 'I have to' NOT 'I had to').\n"
+        "- Preserve speaker perspective. First-person statements must stay first-person. ('うん、ある' said by Haruto = 'Yeah, I do' NOT 'It does').\n"
+        "- Preserve emotional intensity. Angry lines must sound angry. ('黙ってろ' = 'Shut up!' NOT 'Stop that').\n"
+        "- Preserve self-doubt and hesitation exactly. ('夢だったんじゃないか' = 'Was that all a dream...?' NOT a neutral statement).\n"
+        "- Never change character names mid-chapter. Maintain strict name consistency.\n"
         "- Do NOT include any romaji, Japanese script, explanations, translation notes, or comments.\n"
         "- Output ONLY the translated English dialogue text, with no extra lines.\n"
     )

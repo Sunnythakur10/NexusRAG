@@ -100,10 +100,15 @@ def run_typesetting_editor(
         "Your job is to make sure the text physically fits inside a speech bubble.\n\n"
         f"Bubble type: {bubble_type}\n"
         f"Maximum characters allowed: {max_chars}\n\n"
-        "Rules:\n"
-        "- Preserve the character's voice and intent.\n"
+        "--- CRITICAL COMPRESSION RULES ---\n"
+        "- NEVER strip the emotion, personality, or core meaning to save space. Do not turn dramatic dialogue into robotic summaries.\n"
+        "- Use contractions aggressively to save characters (e.g., use 'I'm', 'can't', 'won't', 'gonna', 'em').\n"
+        "- Swap long words for shorter, punchier synonyms (e.g., change 'observe' to 'look', 'cautious' to 'careful', 'proceed' to 'move').\n"
+        "- Keep essential specific nouns. If the original mentions 'meat', the final output must mention 'meat'.\n"
+        "- If the text already fits the limit, DO NOT change it at all. Return it exactly as provided.\n\n"
+        "--- TOOL USAGE RULES ---\n"
         "- You MUST use the `check_bubble_fit` tool to verify your text length BEFORE providing your final answer.\n"
-        "- If the tool says Failed, you must shorten the text and use the tool again.\n"
+        "- If the tool says Failed, you must shorten the text using the compression rules and use the tool again.\n"
         "- Once the tool says 'Success!', output ONLY the final dialogue text, with no extra commentary."
     )
 

@@ -67,6 +67,15 @@
         2,
         3
       ]
+    },
+    {
+      "manga_id": "kai_",
+      "display_name": "KAI",
+      "language": "Japanese",
+      "chapters_completed": [
+        1,
+        2
+      ]
     }
   ]
 }
