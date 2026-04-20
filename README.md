@@ -1,5 +1,6 @@
 # 🎌 NexusRAG: Autonomous Agentic Localization Engine
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_supported.svg)](https://nexusrag-2kbzprgxw77xsyzwars8tc.streamlit.app)
 ![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)
 ![LangGraph](https://img.shields.io/badge/LangGraph-State_Machine-orange)
 ![LangSmith](https://img.shields.io/badge/LangSmith-Tracing-black)
