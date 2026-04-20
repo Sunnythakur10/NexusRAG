@@ -1,5 +1,5 @@
 """
-Streamlit frontend for the Lumina Pipeline.
+Streamlit frontend for the NexasRAG Pipeline.
 
 Provides an interactive UI to run the full localization pipeline:
 Step 0 Translation → Agent 1 Cultural Adaptation → Agent 2 Continuity →
@@ -71,7 +71,7 @@ def _metric_int(label: str, value: Any) -> None:
 
 def _init_page() -> None:
     st.set_page_config(layout="wide")
-    st.title("🎌 Lumina Pipeline")
+    st.title("🎌 NexusRAG")
     st.caption("Autonomous Japanese Manga Localization Engine")
 
 
@@ -349,7 +349,7 @@ def _results_tabs(raw_text: str, result: Dict[str, Any]) -> None:
 def main() -> None:
     _init_page()
     st.divider()
-    st.sidebar.header("📚 Lumina Projects")
+    st.sidebar.header("📚 NexusRAG Projects")
 
     if "selected_project_manga_id" not in st.session_state:
         st.session_state["selected_project_manga_id"] = None
