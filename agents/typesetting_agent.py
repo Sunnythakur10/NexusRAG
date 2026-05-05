@@ -21,7 +21,6 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser, JsonOutputParser
 from langchain_groq import ChatGroq
 
-# Make the project root importable so we can access local packages and data files.
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.groq_client import get_models
 
@@ -91,10 +90,8 @@ def run_typesetting_editor(
     if len(text) <= max_chars:
         return text
 
-    # 1. Define the tools array
     tools = [check_bubble_fit]
 
-    # 2. The system prompt becomes the state_modifier
     system_prompt = (
         "You are a typesetting editor for localized manga/webtoon dialogue.\n"
         "Your job is to make sure the text physically fits inside a speech bubble.\n\n"
@@ -113,11 +110,9 @@ def run_typesetting_editor(
     )
 
     # 3. Create the modern LangGraph React Agent
-    # 3. Create the agent with NO version-specific modifier arguments
     agent_executor = create_react_agent(quality_model, tools)
 
     try:
-        # Pass the system prompt directly as the first message in the execution state
         result = agent_executor.invoke({
             "messages": [
                 SystemMessage(content=system_prompt),
@@ -125,13 +120,11 @@ def run_typesetting_editor(
             ]
         })
         
-        # The final output is the content of the very last message in the chain
         rewritten = result["messages"][-1].content.strip()
     except Exception as exc:
         print(f"[Typesetting Agent] Tool execution failed: {exc}")
         rewritten = _truncate_at_word_boundary(text, max_chars)
         
-    # Hard programmatic fallback just in case
     if len(rewritten) > max_chars:
         rewritten = _truncate_at_word_boundary(rewritten, max_chars)
 
@@ -141,7 +134,7 @@ def grade_typesetting_output(
     original: str,
     final: str,
     bubble_type: str,
-    fast_model: ChatGroq,  # <-- LangChain wrapper
+    fast_model: ChatGroq,  
     *,
     bubble_char_limit: int | None = None,
 ) -> Dict[str, Any]:

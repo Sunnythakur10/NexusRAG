@@ -76,6 +76,16 @@
         1,
         2
       ]
+    },
+    {
+      "manga_id": "haruto_adventure",
+      "display_name": "Haruto Adventure",
+      "language": "Japanese",
+      "chapters_completed": [
+        1,
+        2,
+        3
+      ]
     }
   ]
 }
