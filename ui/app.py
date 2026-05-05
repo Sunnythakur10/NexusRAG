@@ -124,8 +124,9 @@ def _inject_css() -> None:
             color: var(--text-primary) !important;
         }
 
-        /* hide default streamlit chrome */
-        #MainMenu, footer, header { visibility: hidden; }
+        /* hide default streamlit chrome but keep the sidebar toggle */
+        #MainMenu, footer { visibility: hidden; }
+        header { background: transparent !important; }
 
         .block-container {
             padding: 1.5rem 2rem 2rem 2rem !important;
