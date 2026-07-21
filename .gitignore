@@ -14,4 +14,4 @@ lumina_cache.db
 
 *.code-workspace
 
-/graphify-out
+graphify-out/
