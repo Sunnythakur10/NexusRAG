@@ -13,3 +13,5 @@ lumina_cache.db
 .env
 
 *.code-workspace
+
+/graphify-out
