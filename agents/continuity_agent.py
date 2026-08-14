@@ -21,11 +21,17 @@ from groq import Groq
 # Make the project root importable so we can access local packages.
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.groq_client import FAST_MODEL, QUALITY_MODEL, get_models  # type: ignore
+from utils.groq_client import FAST_MODEL, QUALITY_MODEL, get_models
+
 from memory.vector_store import (
     query_character_profile,
     query_character_profile_dict,
-    query_similar_approved_lines,
-)  # type: ignore
+)
+
+from rpc.retrieval_client import RetrievalClient
+
+
+retrieval_client = RetrievalClient()# type: ignore
 
 
 @dataclass
@@ -111,12 +117,12 @@ def run_continuity_director(
 
     # Pull recent approved lines
     # TRUE RAG: Pull semantically similar approved lines based on the current text
-    approved_lines = query_similar_approved_lines(
-        character_name=character_name,
-        manga_id=manga_id,
-        query_text=adapted_text,
-        limit=5,
-    )
+    approved_lines = retrieval_client.retrieve_similar_lines(
+    character_name=character_name,
+    manga_id=manga_id,
+    query_text=adapted_text,
+    limit=5,
+)
     if approved_lines:
         approved_lines_formatted = "\n".join(
             f"- [{row.get('panel_id')}] {row.get('final_output')}"

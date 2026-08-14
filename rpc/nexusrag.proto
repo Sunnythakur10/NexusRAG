@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+service RetrievalService {
+    rpc RetrieveSimilarLines (RetrievalRequest)
+        returns (RetrievalResponse);
+}
+
+message RetrievalRequest {
+    string character_name = 1;
+    string manga_id = 2;
+    string query_text = 3;
+    int32 limit = 4;
+    int32 lamport_timestamp = 5;
+}
+
+message ApprovedLine {
+    string panel_id = 1;
+    string original_japanese = 2;
+    string final_output = 3;
+    int64 created_at = 4;
+}
+
+message RetrievalResponse {
+    repeated ApprovedLine lines = 1;
+    int32 lamport_timestamp = 2;
+}
