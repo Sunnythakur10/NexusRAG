@@ -1,9 +1,16 @@
 syntax = "proto3";
 
+
 service RetrievalService {
-    rpc RetrieveSimilarLines (RetrievalRequest)
-        returns (RetrievalResponse);
+    rpc RetrieveSimilarLines (RetrievalRequest) returns (RetrievalResponse);
 }
+
+
+// Experiment 4: Ricart-Agrawala Mutual Exclusion
+service MutexService {
+    rpc RequestCriticalSection (MutexRequest) returns (MutexResponse);
+}
+
 
 message RetrievalRequest {
     string character_name = 1;
@@ -13,6 +20,7 @@ message RetrievalRequest {
     int32 lamport_timestamp = 5;
 }
 
+
 message ApprovedLine {
     string panel_id = 1;
     string original_japanese = 2;
@@ -20,7 +28,20 @@ message ApprovedLine {
     int64 created_at = 4;
 }
 
+
 message RetrievalResponse {
     repeated ApprovedLine lines = 1;
+    int32 lamport_timestamp = 2;
+}
+
+
+// Experiment 4: Ricart-Agrawala Messages
+message MutexRequest {
+    int32 node_id = 1;
+    int32 lamport_timestamp = 2;
+}
+
+message MutexResponse {
+    bool granted = 1;
     int32 lamport_timestamp = 2;
 }
