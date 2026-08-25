@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0enexusrag.proto\"z\n\x10RetrievalRequest\x12\x16\n\x0e\x63haracter_name\x18\x01 \x01(\t\x12\x10\n\x08manga_id\x18\x02 \x01(\t\x12\x12\n\nquery_text\x18\x03 \x01(\t\x12\r\n\x05limit\x18\x04 \x01(\x05\x12\x19\n\x11lamport_timestamp\x18\x05 \x01(\x05\"e\n\x0c\x41pprovedLine\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x19\n\x11original_japanese\x18\x02 \x01(\t\x12\x14\n\x0c\x66inal_output\x18\x03 \x01(\t\x12\x12\n\ncreated_at\x18\x04 \x01(\x03\"L\n\x11RetrievalResponse\x12\x1c\n\x05lines\x18\x01 \x03(\x0b\x32\r.ApprovedLine\x12\x19\n\x11lamport_timestamp\x18\x02 \x01(\x05\x32Q\n\x10RetrievalService\x12=\n\x14RetrieveSimilarLines\x12\x11.RetrievalRequest\x1a\x12.RetrievalResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0enexusrag.proto\"z\n\x10RetrievalRequest\x12\x16\n\x0e\x63haracter_name\x18\x01 \x01(\t\x12\x10\n\x08manga_id\x18\x02 \x01(\t\x12\x12\n\nquery_text\x18\x03 \x01(\t\x12\r\n\x05limit\x18\x04 \x01(\x05\x12\x19\n\x11lamport_timestamp\x18\x05 \x01(\x05\"e\n\x0c\x41pprovedLine\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x19\n\x11original_japanese\x18\x02 \x01(\t\x12\x14\n\x0c\x66inal_output\x18\x03 \x01(\t\x12\x12\n\ncreated_at\x18\x04 \x01(\x03\"L\n\x11RetrievalResponse\x12\x1c\n\x05lines\x18\x01 \x03(\x0b\x32\r.ApprovedLine\x12\x19\n\x11lamport_timestamp\x18\x02 \x01(\x05\"H\n\x0bLockRequest\x12\x13\n\x0bresource_id\x18\x01 \x01(\t\x12\x11\n\tholder_id\x18\x02 \x01(\x05\x12\x11\n\ttimestamp\x18\x03 \x01(\x05\"-\n\tLockReply\x12\x0f\n\x07granted\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t2Q\n\x10RetrievalService\x12=\n\x14RetrieveSimilarLines\x12\x11.RetrievalRequest\x1a\x12.RetrievalResponse2_\n\x0bLockService\x12\'\n\x0b\x41\x63quireLock\x12\x0c.LockRequest\x1a\n.LockReply\x12\'\n\x0bReleaseLock\x12\x0c.LockRequest\x1a\n.LockReplyb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -37,6 +37,12 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_APPROVEDLINE']._serialized_end=243
   _globals['_RETRIEVALRESPONSE']._serialized_start=245
   _globals['_RETRIEVALRESPONSE']._serialized_end=321
-  _globals['_RETRIEVALSERVICE']._serialized_start=323
-  _globals['_RETRIEVALSERVICE']._serialized_end=404
+  _globals['_LOCKREQUEST']._serialized_start=323
+  _globals['_LOCKREQUEST']._serialized_end=395
+  _globals['_LOCKREPLY']._serialized_start=397
+  _globals['_LOCKREPLY']._serialized_end=442
+  _globals['_RETRIEVALSERVICE']._serialized_start=444
+  _globals['_RETRIEVALSERVICE']._serialized_end=525
+  _globals['_LOCKSERVICE']._serialized_start=527
+  _globals['_LOCKSERVICE']._serialized_end=622
 # @@protoc_insertion_point(module_scope)
