@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0enexusrag.proto\"z\n\x10RetrievalRequest\x12\x16\n\x0e\x63haracter_name\x18\x01 \x01(\t\x12\x10\n\x08manga_id\x18\x02 \x01(\t\x12\x12\n\nquery_text\x18\x03 \x01(\t\x12\r\n\x05limit\x18\x04 \x01(\x05\x12\x19\n\x11lamport_timestamp\x18\x05 \x01(\x05\"e\n\x0c\x41pprovedLine\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x19\n\x11original_japanese\x18\x02 \x01(\t\x12\x14\n\x0c\x66inal_output\x18\x03 \x01(\t\x12\x12\n\ncreated_at\x18\x04 \x01(\x03\"L\n\x11RetrievalResponse\x12\x1c\n\x05lines\x18\x01 \x03(\x0b\x32\r.ApprovedLine\x12\x19\n\x11lamport_timestamp\x18\x02 \x01(\x05\":\n\x0cMutexRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\x05\x12\x19\n\x11lamport_timestamp\x18\x02 \x01(\x05\";\n\rMutexResponse\x12\x0f\n\x07granted\x18\x01 \x01(\x08\x12\x19\n\x11lamport_timestamp\x18\x02 \x01(\x05\x32Q\n\x10RetrievalService\x12=\n\x14RetrieveSimilarLines\x12\x11.RetrievalRequest\x1a\x12.RetrievalResponse2G\n\x0cMutexService\x12\x37\n\x16RequestCriticalSection\x12\r.MutexRequest\x1a\x0e.MutexResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0enexusrag.proto\"z\n\x10RetrievalRequest\x12\x16\n\x0e\x63haracter_name\x18\x01 \x01(\t\x12\x10\n\x08manga_id\x18\x02 \x01(\t\x12\x12\n\nquery_text\x18\x03 \x01(\t\x12\r\n\x05limit\x18\x04 \x01(\x05\x12\x19\n\x11lamport_timestamp\x18\x05 \x01(\x05\"e\n\x0c\x41pprovedLine\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x19\n\x11original_japanese\x18\x02 \x01(\t\x12\x14\n\x0c\x66inal_output\x18\x03 \x01(\t\x12\x12\n\ncreated_at\x18\x04 \x01(\x03\"L\n\x11RetrievalResponse\x12\x1c\n\x05lines\x18\x01 \x03(\x0b\x32\r.ApprovedLine\x12\x19\n\x11lamport_timestamp\x18\x02 \x01(\x05\":\n\x0cMutexRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\x05\x12\x19\n\x11lamport_timestamp\x18\x02 \x01(\x05\";\n\rMutexResponse\x12\x0f\n\x07granted\x18\x01 \x01(\x08\x12\x19\n\x11lamport_timestamp\x18\x02 \x01(\x05\"^\n\x0bValueUpdate\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x02 \x01(\t\x12\x19\n\x11lamport_timestamp\x18\x03 \x01(\x05\x12\x16\n\x0eorigin_replica\x18\x04 \x01(\t\"G\n\x07SaveAck\x12\x10\n\x08\x61\x63\x63\x65pted\x18\x01 \x01(\x08\x12\x0f\n\x07replica\x18\x02 \x01(\t\x12\x19\n\x11lamport_timestamp\x18\x03 \x01(\x05\"\x19\n\nValueQuery\x12\x0b\n\x03key\x18\x01 \x01(\t\"]\n\nValueState\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x02 \x01(\t\x12\x19\n\x11lamport_timestamp\x18\x03 \x01(\x05\x12\x16\n\x0eorigin_replica\x18\x04 \x01(\t2Q\n\x10RetrievalService\x12=\n\x14RetrieveSimilarLines\x12\x11.RetrievalRequest\x1a\x12.RetrievalResponse2G\n\x0cMutexService\x12\x37\n\x16RequestCriticalSection\x12\r.MutexRequest\x1a\x0e.MutexResponse2\x81\x01\n\x0eReplicaService\x12#\n\tSaveValue\x12\x0c.ValueUpdate\x1a\x08.SaveAck\x12$\n\nSyncUpdate\x12\x0c.ValueUpdate\x1a\x08.SaveAck\x12$\n\x08GetValue\x12\x0b.ValueQuery\x1a\x0b.ValueStateb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -41,8 +41,18 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_MUTEXREQUEST']._serialized_end=381
   _globals['_MUTEXRESPONSE']._serialized_start=383
   _globals['_MUTEXRESPONSE']._serialized_end=442
-  _globals['_RETRIEVALSERVICE']._serialized_start=444
-  _globals['_RETRIEVALSERVICE']._serialized_end=525
-  _globals['_MUTEXSERVICE']._serialized_start=527
-  _globals['_MUTEXSERVICE']._serialized_end=598
+  _globals['_VALUEUPDATE']._serialized_start=444
+  _globals['_VALUEUPDATE']._serialized_end=538
+  _globals['_SAVEACK']._serialized_start=540
+  _globals['_SAVEACK']._serialized_end=611
+  _globals['_VALUEQUERY']._serialized_start=613
+  _globals['_VALUEQUERY']._serialized_end=638
+  _globals['_VALUESTATE']._serialized_start=640
+  _globals['_VALUESTATE']._serialized_end=733
+  _globals['_RETRIEVALSERVICE']._serialized_start=735
+  _globals['_RETRIEVALSERVICE']._serialized_end=816
+  _globals['_MUTEXSERVICE']._serialized_start=818
+  _globals['_MUTEXSERVICE']._serialized_end=889
+  _globals['_REPLICASERVICE']._serialized_start=892
+  _globals['_REPLICASERVICE']._serialized_end=1021
 # @@protoc_insertion_point(module_scope)

@@ -5,7 +5,7 @@ import warnings
 
 import nexusrag_pb2 as nexusrag__pb2
 
-GRPC_GENERATED_VERSION = '1.83.0'
+GRPC_GENERATED_VERSION = '1.83.1'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -161,6 +161,176 @@ class MutexService:
             '/MutexService/RequestCriticalSection',
             nexusrag__pb2.MutexRequest.SerializeToString,
             nexusrag__pb2.MutexResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+
+class ReplicaServiceStub:
+    """============================================================
+    Experiment 7: Eventual Consistency via Gossip Replication
+    ============================================================
+
+    """
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.SaveValue = channel.unary_unary(
+                '/ReplicaService/SaveValue',
+                request_serializer=nexusrag__pb2.ValueUpdate.SerializeToString,
+                response_deserializer=nexusrag__pb2.SaveAck.FromString,
+                _registered_method=True)
+        self.SyncUpdate = channel.unary_unary(
+                '/ReplicaService/SyncUpdate',
+                request_serializer=nexusrag__pb2.ValueUpdate.SerializeToString,
+                response_deserializer=nexusrag__pb2.SaveAck.FromString,
+                _registered_method=True)
+        self.GetValue = channel.unary_unary(
+                '/ReplicaService/GetValue',
+                request_serializer=nexusrag__pb2.ValueQuery.SerializeToString,
+                response_deserializer=nexusrag__pb2.ValueState.FromString,
+                _registered_method=True)
+
+
+class ReplicaServiceServicer:
+    """============================================================
+    Experiment 7: Eventual Consistency via Gossip Replication
+    ============================================================
+
+    """
+
+    def SaveValue(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SyncUpdate(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetValue(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_ReplicaServiceServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'SaveValue': grpc.unary_unary_rpc_method_handler(
+                    servicer.SaveValue,
+                    request_deserializer=nexusrag__pb2.ValueUpdate.FromString,
+                    response_serializer=nexusrag__pb2.SaveAck.SerializeToString,
+            ),
+            'SyncUpdate': grpc.unary_unary_rpc_method_handler(
+                    servicer.SyncUpdate,
+                    request_deserializer=nexusrag__pb2.ValueUpdate.FromString,
+                    response_serializer=nexusrag__pb2.SaveAck.SerializeToString,
+            ),
+            'GetValue': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetValue,
+                    request_deserializer=nexusrag__pb2.ValueQuery.FromString,
+                    response_serializer=nexusrag__pb2.ValueState.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'ReplicaService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('ReplicaService', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class ReplicaService:
+    """============================================================
+    Experiment 7: Eventual Consistency via Gossip Replication
+    ============================================================
+
+    """
+
+    @staticmethod
+    def SaveValue(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/ReplicaService/SaveValue',
+            nexusrag__pb2.ValueUpdate.SerializeToString,
+            nexusrag__pb2.SaveAck.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def SyncUpdate(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/ReplicaService/SyncUpdate',
+            nexusrag__pb2.ValueUpdate.SerializeToString,
+            nexusrag__pb2.SaveAck.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetValue(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/ReplicaService/GetValue',
+            nexusrag__pb2.ValueQuery.SerializeToString,
+            nexusrag__pb2.ValueState.FromString,
             options,
             channel_credentials,
             insecure,
